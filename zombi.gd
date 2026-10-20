@@ -3,24 +3,29 @@ extends Area2D
 
 signal toco_al_jugador(zombi)
 
+@export_enum("x", "y") var eje: String = "x"   # en qué eje hace el vaivén
 @export var speed = 60.0        # px/s (con 0 se queda quieto)
-@export var distancia = 96.0    # px hacia cada lado de su x inicial
+@export var distancia = 96.0    # px hacia cada lado de su posición inicial
 
-var inicio_x = 0.0
+var inicio = Vector2.ZERO
 var direccion = 1
 
 
 func _ready():
-	inicio_x = position.x
+	inicio = position
 	body_entered.connect(_on_body_entered)
 
 
 func _process(delta):
-	position.x += speed * direccion * delta
-	if abs(position.x - inicio_x) >= distancia:
-		position.x = inicio_x + distancia * direccion
+	var i = 0 if eje == "x" else 1   # Vector2: [0] es x, [1] es y
+	var pos = position
+	pos[i] += speed * direccion * delta
+	if abs(pos[i] - inicio[i]) >= distancia:
+		pos[i] = inicio[i] + distancia * direccion
 		direccion *= -1
-	$Sprite2D.flip_h = direccion < 0
+	position = pos
+	if eje == "x":
+		$Sprite2D.flip_h = direccion < 0
 
 
 func _on_body_entered(body):
@@ -29,5 +34,5 @@ func _on_body_entered(body):
 
 
 func volver_a_casa():
-	position.x = inicio_x
+	position = inicio
 	direccion = 1

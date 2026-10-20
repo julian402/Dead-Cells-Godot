@@ -1,6 +1,6 @@
 extends "res://bloques.gd"
 # Taller 4. construir() arma el nivel a partir del MAPA:
-# "#" bloque, "." celula, "o" pergamino, "E" zombi.
+# "#" bloque, "." celula, "o" pergamino, "E" zombi, "V" zombi vertical.
 
 const MAPA = [
 	"                                        ",
@@ -10,7 +10,7 @@ const MAPA = [
 	"            .            .              ",
 	"      .              o          .       ",
 	"   o                                    ",
-	"#      .    #           ##   .         #",
+	"#      .    #        V  ##   .         #",
 	"#        .  #    E.     ##       E.    #",
 	"########################################",
 ]
@@ -47,10 +47,12 @@ func construir():
 					escena = celula_escena
 				"o":
 					escena = pergamino_escena
-				"E":
+				"E", "V":
 					escena = zombi_escena
 			if escena:
 				var nodo = escena.instantiate()
+				if MAPA[fila][col] == "V":
+					nodo.eje = "y"
 				nodo.position = Vector2(col + 0.5, fila + 0.5) * CELDA
 				$Mapa.add_child(nodo)
 
