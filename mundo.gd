@@ -34,6 +34,10 @@ func _ready():
 	for enemigo in get_tree().get_nodes_in_group("enemigos"):
 		enemigo.toco_al_jugador.connect(_on_enemigo_toco)
 	$TimerPoder.timeout.connect(_on_timer_poder_timeout)
+	# la cámara no se sale del mapa: así no se ve el vacío debajo del piso
+	jugador.camara.limit_left = 0
+	jugador.camara.limit_right = MAPA[0].length() * CELDA
+	jugador.camara.limit_bottom = MAPA.size() * CELDA
 	actualizar_hud()
 
 

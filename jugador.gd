@@ -16,6 +16,7 @@ var muriendo = false
 @onready var sonido_espada = $Espada
 @onready var sonido_rodar = $Rodar
 @onready var sonido_muerte = $Muerte
+@onready var camara = $Camera2D
 
 
 func _ready():
@@ -38,6 +39,8 @@ func _physics_process(delta):
 	mover(delta)
 	actualizar_animacion()
 	orientar()
+	# la cámara se adelanta poco a poco hacia donde mira, como en Dead Cells
+	camara.offset.x = move_toward(camara.offset.x, 80 * mirando, 240 * delta)
 	if Input.is_action_just_pressed("atacar"):
 		atacar()
 
