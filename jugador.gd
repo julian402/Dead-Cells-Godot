@@ -1,6 +1,8 @@
 extends CharacterBody2D
 # Solución del Taller 3 (solo profesor).
 
+signal golpeo(enemigo)   # la espada tocó a un enemigo: el Mundo decide qué pasa
+
 @export var speed = 220.0            # px/s
 @export var gravedad = 1200.0        # px/s²
 @export var salto = 560.0            # px/s hacia arriba
@@ -80,6 +82,9 @@ func atacar():
 	sonido_espada.play()   # cada golpe es un sonido nuevo: aquí sí se reinicia
 	# un tajo corto que se ve solo una décima de segundo
 	$Golpe/ColorRect.show()
+	for area in golpe.get_overlapping_areas():
+		if area.is_in_group("enemigos"):
+			golpeo.emit(area)
 	await get_tree().create_timer(0.1).timeout
 	$Golpe/ColorRect.hide()
 

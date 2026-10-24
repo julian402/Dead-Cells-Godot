@@ -36,3 +36,13 @@ func _on_body_entered(body):
 func volver_a_casa():
 	position = inicio
 	direccion = 1
+
+
+func morir():
+	# primero deja de ser enemigo y de hacer daño; después se desvanece
+	remove_from_group("enemigos")
+	set_deferred("monitoring", false)
+	set_process(false)
+	var tween = create_tween()
+	tween.tween_property(self, "modulate", Color(1, 0.3, 0.3, 0), 0.2)
+	tween.tween_callback(queue_free)
