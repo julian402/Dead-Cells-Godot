@@ -78,6 +78,10 @@ func orientar():
 
 func atacar():
 	sonido_espada.play()   # cada golpe es un sonido nuevo: aquí sí se reinicia
+	# un tajo corto que se ve solo una décima de segundo
+	$Golpe/ColorRect.show()
+	await get_tree().create_timer(0.1).timeout
+	$Golpe/ColorRect.hide()
 
 
 # Nivel 3
