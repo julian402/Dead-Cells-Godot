@@ -3,9 +3,10 @@ extends Node2D
 # para que el personaje no se enganche en las uniones entre bloques.
 
 const CELDA = 64
+var bloque_textura = preload("res://assets/bloque.png")
 
 
-func construir_bloques(mapa: Array, color: Color):
+func construir_bloques(mapa: Array, color: Color = Color.WHITE):
 	for fila in mapa.size():
 		var col = 0
 		var linea: String = mapa[fila]
@@ -20,7 +21,7 @@ func construir_bloques(mapa: Array, color: Color):
 				col += 1
 
 
-func crear_bloque(col_ini: int, col_fin: int, fila: int, color: Color):
+func crear_bloque(col_ini: int, col_fin: int, fila: int, _color: Color):
 	var ancho = (col_fin - col_ini + 1) * CELDA
 	var cuerpo = StaticBody2D.new()
 	cuerpo.position = Vector2(col_ini * CELDA + ancho / 2.0, (fila + 0.5) * CELDA)
@@ -29,8 +30,9 @@ func crear_bloque(col_ini: int, col_fin: int, fila: int, color: Color):
 	rect.size = Vector2(ancho, CELDA)
 	forma.shape = rect
 	cuerpo.add_child(forma)
-	var dibujo = ColorRect.new()
-	dibujo.color = color
+	var dibujo = TextureRect.new()
+	dibujo.texture = bloque_textura
+	dibujo.stretch_mode = TextureRect.STRETCH_TILE
 	dibujo.size = Vector2(ancho, CELDA)
 	dibujo.position = Vector2(-ancho / 2.0, -CELDA / 2.0)
 	cuerpo.add_child(dibujo)
