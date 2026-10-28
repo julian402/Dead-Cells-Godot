@@ -243,9 +243,10 @@ light_energy = 0.0
 omni_range = 4.0
 omni_attenuation = 2.0
 
-[node name="SistemaEventos" type="Node" parent="." node_paths=PackedStringArray("luz_evento")]
+[node name="SistemaEventos" type="Node" parent="." node_paths=PackedStringArray("luz_evento", "luz_variable")]
 script = ExtResource("9_sis")
 luz_evento = NodePath("../LuzEvento")
+luz_variable = NodePath("../Jugador/LuzVital")
 
 [node name="Jugador" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 0, 0)
@@ -276,6 +277,12 @@ modelo = NodePath("../Modelo")
 
 [node name="Empujador" type="Node" parent="Jugador"]
 script = ExtResource("5_empuj")
+
+[node name="LuzVital" type="OmniLight3D" parent="Jugador"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0.8)
+light_color = Color(1, 0.702, 0.278, 1)
+omni_range = 3.0
+omni_attenuation = 2.0
 
 [node name="Camara" type="Camera3D" parent="." node_paths=PackedStringArray("objetivo", "motor")]
 process_priority = 10
