@@ -1,34 +1,31 @@
-class_name LuzParpadeante
 extends OmniLight3D
-## Tarea B, nivel 1. La antorcha parpadea con ruido (suave), no con randf() (que salta).
-## Con la misma semilla el parpadeo es el mismo en todos los PC.
+# Tarea B nivel 1: la antorcha parpadea con ruido (cambia suave, no salta como randf)
 
-@export var energia_base := 2.0
-@export var amplitud := 0.3            # 0.3 = sube o baja hasta un 30 %
-@export var velocidad := 4.0           # qué tan rápido recorre el ruido
-@export var semilla := 7
-@export var segundos_encendida := 0.0  # 0 = nunca se apaga; 8 = se apaga 8 s después de entrar
-@export var k_apagado := 1.5           # 1/s: a los 2 s de apagarse queda el 5 % (e^-3)
-@export var llama: Node3D              # la malla de la llama: se esconde con la antorcha apagada
+@export var energia_base = 2.0
+@export var amplitud = 0.3      # sube o baja hasta un 30 %
+@export var velocidad = 4.0
+@export var semilla = 7
+@export var apagar_en = 0.0     # segundos para apagarse (0 = nunca se apaga)
+@export var llama: Node3D
 
-var ruido := FastNoiseLite.new()
-var t := 0.0
+var ruido = FastNoiseLite.new()
+var tiempo = 0.0
 
 
-func _ready() -> void:
+func _ready():
 	ruido.seed = semilla
-	ruido.frequency = 1.0          # sin esto casi no cambia (viene en 0.01)
+	ruido.frequency = 1.0
 
 
-func _process(delta: float) -> void:
-	t += delta
-	# la base baja con decaer: la antorcha se apaga suave, igual a cualquier FPS
-	if segundos_encendida > 0.0 and t > segundos_encendida:
-		energia_base = SistemaEventos.decaer(energia_base, 0.0, k_apagado, delta)
-	light_energy = energia(energia_base, amplitud, ruido.get_noise_1d(t * velocidad))
+func _process(delta):
+	tiempo += delta
+
+	# nivel 2: despues de un tiempo la antorcha se va apagando
+	if apagar_en > 0 and tiempo > apagar_en:
+		energia_base = lerp(energia_base, 0.0, 1 - exp(-1.5 * delta))
+
+	var valor = ruido.get_noise_1d(tiempo * velocidad)   # entre -1 y 1
+	light_energy = energia_base * (1 + amplitud * valor)
+
 	if llama != null:
 		llama.visible = light_energy > 0.05
-
-
-static func energia(base: float, amp: float, valor_ruido: float) -> float:
-	return maxf(0.0, base * (1.0 + amp * valor_ruido))
