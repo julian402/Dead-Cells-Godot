@@ -7,6 +7,8 @@
 [ext_resource type="Script" path="res://empujador.gd" id="5_empuj"]
 [ext_resource type="Script" path="res://camara_seguidora.gd" id="6_camara"]
 [ext_resource type="Script" path="res://luz_parpadeante.gd" id="7_luz"]
+[ext_resource type="Script" path="res://disparador.gd" id="8_disp"]
+[ext_resource type="Script" path="res://sistema_eventos.gd" id="9_sis"]
 
 [sub_resource type="StandardMaterial3D" id="MatPiedra"]
 albedo_color = Color(0.227, 0.247, 0.294, 1)
@@ -73,6 +75,15 @@ radius = 0.1
 height = 0.25
 radial_segments = 6
 rings = 3
+
+[sub_resource type="StandardMaterial3D" id="MatTrampa"]
+albedo_color = Color(0.35, 0.1, 0.09, 1)
+
+[sub_resource type="BoxMesh" id="MallaTrampa"]
+material = SubResource("MatTrampa")
+size = Vector3(1, 0.05, 1)
+
+[sub_resource type="BoxShape3D" id="FormaDisparador"]
 
 [sub_resource type="BoxMesh" id="MallaJugador"]
 material = SubResource("MatCeniza")
@@ -179,7 +190,7 @@ mesh = SubResource("MallaSoporte")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, 0)
 mesh = SubResource("MallaLlama")
 
-[node name="Luz" type="OmniLight3D" parent="Antorcha1"]
+[node name="Luz" type="OmniLight3D" parent="Antorcha1" node_paths=PackedStringArray("llama")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0.3)
 light_color = Color(1, 0.702, 0.278, 1)
 light_energy = 2.0
@@ -187,6 +198,8 @@ shadow_enabled = true
 omni_range = 6.0
 omni_attenuation = 2.0
 script = ExtResource("7_luz")
+segundos_encendida = 8.0
+llama = NodePath("../Llama")
 
 [node name="Antorcha2" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -2.85)
@@ -198,7 +211,7 @@ mesh = SubResource("MallaSoporte")
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, 0)
 mesh = SubResource("MallaLlama")
 
-[node name="Luz" type="OmniLight3D" parent="Antorcha2"]
+[node name="Luz" type="OmniLight3D" parent="Antorcha2" node_paths=PackedStringArray("llama")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0.3)
 light_color = Color(1, 0.702, 0.278, 1)
 light_energy = 2.0
@@ -207,6 +220,32 @@ omni_range = 6.0
 omni_attenuation = 2.0
 script = ExtResource("7_luz")
 semilla = 11
+llama = NodePath("../Llama")
+
+[node name="Disparador" type="Area3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0, 0)
+collision_layer = 0
+collision_mask = 8
+script = ExtResource("8_disp")
+
+[node name="Forma" type="CollisionShape3D" parent="Disparador"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, 0)
+shape = SubResource("FormaDisparador")
+
+[node name="Trampa" type="MeshInstance3D" parent="Disparador"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.025, 0)
+mesh = SubResource("MallaTrampa")
+
+[node name="LuzEvento" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1.5, 0)
+light_color = Color(0.91, 0.263, 0.227, 1)
+light_energy = 0.0
+omni_range = 4.0
+omni_attenuation = 2.0
+
+[node name="SistemaEventos" type="Node" parent="." node_paths=PackedStringArray("luz_evento")]
+script = ExtResource("9_sis")
+luz_evento = NodePath("../LuzEvento")
 
 [node name="Jugador" type="CharacterBody3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 0, 0)
