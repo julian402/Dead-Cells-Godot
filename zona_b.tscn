@@ -1,0 +1,247 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://control_jugador.gd" id="1_ctrl"]
+[ext_resource type="Script" path="res://lector_entrada.gd" id="2_lector"]
+[ext_resource type="Script" path="res://motor.gd" id="3_motor"]
+[ext_resource type="Script" path="res://orientador.gd" id="4_orient"]
+[ext_resource type="Script" path="res://empujador.gd" id="5_empuj"]
+[ext_resource type="Script" path="res://camara_seguidora.gd" id="6_camara"]
+[ext_resource type="Script" path="res://luz_parpadeante.gd" id="7_luz"]
+
+[sub_resource type="StandardMaterial3D" id="MatPiedra"]
+albedo_color = Color(0.227, 0.247, 0.294, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="MatPiso"]
+albedo_color = Color(0.3, 0.31, 0.34, 1)
+roughness = 1.0
+
+[sub_resource type="StandardMaterial3D" id="MatCeniza"]
+albedo_color = Color(0.85, 0.8, 0.72, 1)
+
+[sub_resource type="StandardMaterial3D" id="MatSoporte"]
+albedo_color = Color(0.12, 0.1, 0.09, 1)
+
+[sub_resource type="StandardMaterial3D" id="MatLlama"]
+shading_mode = 0
+albedo_color = Color(1, 0.702, 0.278, 1)
+
+[sub_resource type="BoxMesh" id="MallaPiso"]
+material = SubResource("MatPiso")
+size = Vector3(16, 0.2, 6)
+
+[sub_resource type="BoxShape3D" id="FormaPiso"]
+size = Vector3(16, 0.2, 6)
+
+[sub_resource type="BoxMesh" id="MallaParedFondo"]
+material = SubResource("MatPiedra")
+size = Vector3(16.8, 4.4, 0.4)
+
+[sub_resource type="BoxShape3D" id="FormaParedFondo"]
+size = Vector3(16.8, 4.4, 0.4)
+
+[sub_resource type="BoxMesh" id="MallaParedLado"]
+material = SubResource("MatPiedra")
+size = Vector3(0.4, 4.4, 6)
+
+[sub_resource type="BoxShape3D" id="FormaParedLado"]
+size = Vector3(0.4, 4.4, 6)
+
+[sub_resource type="BoxMesh" id="MallaTecho"]
+material = SubResource("MatPiedra")
+size = Vector3(16.8, 0.2, 6)
+
+[sub_resource type="BoxMesh" id="MallaPilar"]
+material = SubResource("MatPiedra")
+size = Vector3(0.6, 4, 0.6)
+
+[sub_resource type="BoxShape3D" id="FormaPilar"]
+size = Vector3(0.6, 4, 0.6)
+
+[sub_resource type="BoxMesh" id="MallaCaja"]
+material = SubResource("MatPiedra")
+
+[sub_resource type="BoxShape3D" id="FormaCaja"]
+
+[sub_resource type="BoxMesh" id="MallaSoporte"]
+material = SubResource("MatSoporte")
+size = Vector3(0.12, 0.6, 0.12)
+
+[sub_resource type="SphereMesh" id="MallaLlama"]
+material = SubResource("MatLlama")
+radius = 0.1
+height = 0.25
+radial_segments = 6
+rings = 3
+
+[sub_resource type="BoxMesh" id="MallaJugador"]
+material = SubResource("MatCeniza")
+size = Vector3(0.7, 1.4, 0.7)
+
+[sub_resource type="BoxShape3D" id="FormaJugador"]
+size = Vector3(0.7, 1.4, 0.7)
+
+[sub_resource type="Environment" id="Catacumbas"]
+background_mode = 1
+background_color = Color(0.043, 0.051, 0.078, 1)
+ambient_light_source = 2
+ambient_light_color = Color(0.227, 0.247, 0.294, 1)
+ambient_light_energy = 0.4
+tonemap_mode = 2
+
+[node name="ZonaB" type="Node3D"]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Catacumbas")
+
+[node name="Cuarto" type="Node3D" parent="."]
+
+[node name="Piso" type="StaticBody3D" parent="Cuarto"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Cuarto/Piso"]
+mesh = SubResource("MallaPiso")
+
+[node name="Forma" type="CollisionShape3D" parent="Cuarto/Piso"]
+shape = SubResource("FormaPiso")
+
+[node name="ParedFondo" type="StaticBody3D" parent="Cuarto"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -3.2)
+
+[node name="Malla" type="MeshInstance3D" parent="Cuarto/ParedFondo"]
+mesh = SubResource("MallaParedFondo")
+
+[node name="Forma" type="CollisionShape3D" parent="Cuarto/ParedFondo"]
+shape = SubResource("FormaParedFondo")
+
+[node name="ParedIzquierda" type="StaticBody3D" parent="Cuarto"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8.2, 2, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Cuarto/ParedIzquierda"]
+mesh = SubResource("MallaParedLado")
+
+[node name="Forma" type="CollisionShape3D" parent="Cuarto/ParedIzquierda"]
+shape = SubResource("FormaParedLado")
+
+[node name="ParedDerecha" type="StaticBody3D" parent="Cuarto"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 8.2, 2, 0)
+
+[node name="Malla" type="MeshInstance3D" parent="Cuarto/ParedDerecha"]
+mesh = SubResource("MallaParedLado")
+
+[node name="Forma" type="CollisionShape3D" parent="Cuarto/ParedDerecha"]
+shape = SubResource("FormaParedLado")
+
+[node name="ParedFrente" type="StaticBody3D" parent="Cuarto"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 3.2)
+
+[node name="Forma" type="CollisionShape3D" parent="Cuarto/ParedFrente"]
+shape = SubResource("FormaParedFondo")
+
+[node name="Techo" type="MeshInstance3D" parent="Cuarto"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.3, 0)
+mesh = SubResource("MallaTecho")
+
+[node name="Pilar1" type="StaticBody3D" parent="Cuarto"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.5, 2, -1.8)
+
+[node name="Malla" type="MeshInstance3D" parent="Cuarto/Pilar1"]
+mesh = SubResource("MallaPilar")
+
+[node name="Forma" type="CollisionShape3D" parent="Cuarto/Pilar1"]
+shape = SubResource("FormaPilar")
+
+[node name="Pilar2" type="StaticBody3D" parent="Cuarto"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 2, -1.8)
+
+[node name="Malla" type="MeshInstance3D" parent="Cuarto/Pilar2"]
+mesh = SubResource("MallaPilar")
+
+[node name="Forma" type="CollisionShape3D" parent="Cuarto/Pilar2"]
+shape = SubResource("FormaPilar")
+
+[node name="Caja" type="StaticBody3D" parent="Cuarto"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.5, 0.5, -1.5)
+
+[node name="Malla" type="MeshInstance3D" parent="Cuarto/Caja"]
+mesh = SubResource("MallaCaja")
+
+[node name="Forma" type="CollisionShape3D" parent="Cuarto/Caja"]
+shape = SubResource("FormaCaja")
+
+[node name="Antorcha1" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -5, 2, -2.85)
+
+[node name="Soporte" type="MeshInstance3D" parent="Antorcha1"]
+mesh = SubResource("MallaSoporte")
+
+[node name="Llama" type="MeshInstance3D" parent="Antorcha1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, 0)
+mesh = SubResource("MallaLlama")
+
+[node name="Luz" type="OmniLight3D" parent="Antorcha1"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0.3)
+light_color = Color(1, 0.702, 0.278, 1)
+light_energy = 2.0
+shadow_enabled = true
+omni_range = 6.0
+omni_attenuation = 2.0
+script = ExtResource("7_luz")
+
+[node name="Antorcha2" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, -2.85)
+
+[node name="Soporte" type="MeshInstance3D" parent="Antorcha2"]
+mesh = SubResource("MallaSoporte")
+
+[node name="Llama" type="MeshInstance3D" parent="Antorcha2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.38, 0)
+mesh = SubResource("MallaLlama")
+
+[node name="Luz" type="OmniLight3D" parent="Antorcha2"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45, 0.3)
+light_color = Color(1, 0.702, 0.278, 1)
+light_energy = 2.0
+shadow_enabled = true
+omni_range = 6.0
+omni_attenuation = 2.0
+script = ExtResource("7_luz")
+semilla = 11
+
+[node name="Jugador" type="CharacterBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 0, 0)
+collision_layer = 8
+collision_mask = 3
+motion_mode = 1
+script = ExtResource("1_ctrl")
+
+[node name="Modelo" type="Node3D" parent="Jugador"]
+
+[node name="Cuerpo" type="MeshInstance3D" parent="Jugador/Modelo"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+mesh = SubResource("MallaJugador")
+
+[node name="Forma" type="CollisionShape3D" parent="Jugador"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.7, 0)
+shape = SubResource("FormaJugador")
+
+[node name="LectorEntrada" type="Node" parent="Jugador"]
+script = ExtResource("2_lector")
+
+[node name="Motor" type="Node" parent="Jugador"]
+script = ExtResource("3_motor")
+
+[node name="Orientador" type="Node" parent="Jugador" node_paths=PackedStringArray("modelo")]
+script = ExtResource("4_orient")
+modelo = NodePath("../Modelo")
+
+[node name="Empujador" type="Node" parent="Jugador"]
+script = ExtResource("5_empuj")
+
+[node name="Camara" type="Camera3D" parent="." node_paths=PackedStringArray("objetivo", "motor")]
+process_priority = 10
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -6.5, 1.5, 9)
+script = ExtResource("6_camara")
+objetivo = NodePath("../Jugador")
+motor = NodePath("../Jugador/Motor")
+desfase = Vector3(0, 1.5, 9)
