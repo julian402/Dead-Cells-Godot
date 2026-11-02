@@ -8,6 +8,7 @@
 [ext_resource type="Script" path="res://camara_seguidora.gd" id="6_camara"]
 [ext_resource type="Script" path="res://sistema_sol.gd" id="7_sol"]
 [ext_resource type="Script" path="res://ciclo_dia.gd" id="8_ciclo"]
+[ext_resource type="Script" path="res://fotometro.gd" id="9_foto"]
 
 [sub_resource type="StandardMaterial3D" id="MatPiedra"]
 albedo_color = Color(0.227, 0.247, 0.294, 1)
@@ -303,3 +304,12 @@ script = ExtResource("6_camara")
 objetivo = NodePath("../Jugador")
 motor = NodePath("../Jugador/Motor")
 desfase = Vector3(0, 1.5, 9)
+
+[node name="Fotometro" type="Node" parent="." node_paths=PackedStringArray("sistema", "camara", "superficie")]
+process_mode = 4
+script = ExtResource("9_foto")
+sistema = NodePath("../SistemaSol")
+camara = NodePath("../Camara")
+superficie = NodePath("../Cuarto/Piso/Malla")
+punto = Vector3(-4, 0, 2)
+horas = Array[float]([6.5, 8.0, 9.0])
