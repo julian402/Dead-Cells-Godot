@@ -1,9 +1,12 @@
 class_name SistemaSol
 extends Node
-## Tarea A, nivel 1. Aplica la hora a la luz principal y al ambiente.
+## Tarea A, niveles 1 y 2. Aplica la hora a la luz principal y al ambiente; avisa cuando cae la noche.
+
+signal cambio_noche(es_noche: bool)
 
 @export var sol: DirectionalLight3D
 @export var entorno: WorldEnvironment
+@export var luz_reacciona: Light3D
 @export var energia_sol := 1.0
 @export var azimut := -30.0        # grados en Y: hacia dónde caen las sombras
 @export var ambiente_dia := 0.4
@@ -11,14 +14,23 @@ extends Node
 
 @onready var ciclo: CicloDia = $CicloDia
 
+var era_noche := false
+
 
 func _ready() -> void:
 	aplicar_hora()
+	era_noche = CicloDia.factor_sol(ciclo.hora) <= 0.0
+	if luz_reacciona != null:
+		cambio_noche.connect(func(n: bool) -> void: luz_reacciona.visible = n)
 
 
 func _process(delta: float) -> void:
 	ciclo.avanzar(delta)
 	aplicar_hora()
+	var es_noche := CicloDia.factor_sol(ciclo.hora) <= 0.0
+	if es_noche != era_noche:
+		era_noche = es_noche
+		cambio_noche.emit(es_noche)
 
 
 func aplicar_hora() -> void:
