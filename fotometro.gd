@@ -1,23 +1,24 @@
 extends Node
+# Herramienta del nivel 3: mide el color del piso en modo laboratorio y lo compara con prediccion_piso()
 
-@export var sistema: SistemaSol
+@export var sistema: Node
 @export var camara: Camera3D
 @export var superficie: MeshInstance3D   # la superficie que se mide
-@export var punto := Vector3(0, 0, 2)
-@export var horas: Array[float] = [6.5, 8.0, 9.0]
+@export var punto = Vector3(-4, 0, 2)
+@export var horas = [6.5, 8.0, 9.0]
 
-var i := 0
-var espera := 0
+var i = 0
+var espera = 0
 
 
-func _ready() -> void:
-	var env := sistema.entorno.environment   # modo laboratorio
+func _ready():
+	var env = sistema.entorno.environment   # modo laboratorio
 	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	env.ambient_light_color = Color.BLACK
 	env.reflected_light_source = Environment.REFLECTION_SOURCE_DISABLED
 	env.tonemap_mode = Environment.TONE_MAPPER_LINEAR
 	env.fog_enabled = false
-	var mate := StandardMaterial3D.new()
+	var mate = StandardMaterial3D.new()
 	mate.roughness = 1.0
 	mate.metallic_specular = 0.0
 	superficie.material_override = mate
@@ -25,14 +26,14 @@ func _ready() -> void:
 	sistema.ciclo.hora = horas[0]
 
 
-func _process(_delta: float) -> void:
+func _process(_delta):
 	espera += 1
-	if espera < 10:   # unos frames para que el render se ponga al día
+	if espera < 10:   # unos frames para que el render se ponga al dia
 		return
 	espera = 0
-	var px := camara.unproject_position(punto)
-	var imagen := get_viewport().get_texture().get_image()
-	var color := imagen.get_pixel(int(px.x), int(px.y))
+	var px = camara.unproject_position(punto)
+	var imagen = get_viewport().get_texture().get_image()
+	var color = imagen.get_pixel(int(px.x), int(px.y))
 	print("hora %.1f medido %.3f predicho %.3f" % [sistema.ciclo.hora,
 		color.srgb_to_linear().r, sistema.prediccion_piso()])
 	i += 1

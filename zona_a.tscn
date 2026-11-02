@@ -114,11 +114,12 @@ light_color = Color(0.168, 0.175, 0.199, 1)
 light_energy = 0.1305
 shadow_enabled = true
 
-[node name="SistemaSol" type="Node" parent="." node_paths=PackedStringArray("sol", "entorno", "luz_reacciona")]
+[node name="SistemaSol" type="Node" parent="." node_paths=PackedStringArray("sol", "entorno", "luz_reacciona", "halo_jugador")]
 script = ExtResource("7_sol")
 sol = NodePath("../Sol")
 entorno = NodePath("../WorldEnvironment")
 luz_reacciona = NodePath("../Antorcha1/Luz")
+halo_jugador = NodePath("../Jugador/Halo")
 
 [node name="CicloDia" type="Node" parent="SistemaSol"]
 script = ExtResource("8_ciclo")
