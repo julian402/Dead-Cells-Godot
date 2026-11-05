@@ -257,6 +257,15 @@ mesh = SubResource("MallaOrbe")
 script = ExtResource("11_efectos")
 objetivo = NodePath("..")
 
+[node name="Orbe2" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 1, 0)
+material_override = SubResource("MatOrbe")
+mesh = SubResource("MallaOrbe")
+
+[node name="ControlEfectos" type="Node" parent="Orbe2" node_paths=PackedStringArray("objetivo")]
+script = ExtResource("11_efectos")
+objetivo = NodePath("..")
+
 [node name="LuzEvento" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1.5, 0)
 light_color = Color(0.91, 0.263, 0.227, 1)
