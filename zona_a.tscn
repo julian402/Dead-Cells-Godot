@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://sistema_sol.gd" id="7_sol"]
 [ext_resource type="Script" path="res://ciclo_dia.gd" id="8_ciclo"]
 [ext_resource type="Script" path="res://fotometro.gd" id="9_foto"]
+[ext_resource type="Shader" path="res://material_mundo.gdshader" id="10_shader"]
 
 [sub_resource type="StandardMaterial3D" id="MatPiedra"]
 albedo_color = Color(0.227, 0.247, 0.294, 1)
@@ -102,6 +103,18 @@ fog_light_color = Color(0.043, 0.051, 0.078, 1)
 fog_density = 1.0
 fog_depth_begin = 8.0
 fog_depth_end = 16.0
+
+[sub_resource type="QuadMesh" id="MallaNiebla"]
+size = Vector2(8, 3)
+subdivide_width = 38
+subdivide_depth = 10
+
+[sub_resource type="ShaderMaterial" id="MatNiebla"]
+shader = ExtResource("10_shader")
+shader_parameter/color_bajo = Color(0.043, 0.051, 0.078, 1)
+shader_parameter/amplitud = 0.25
+shader_parameter/longitud = 3.0
+shader_parameter/periodo = 3.0
 
 [node name="ZonaA" type="Node3D"]
 
@@ -314,3 +327,8 @@ camara = NodePath("../Camara")
 superficie = NodePath("../Cuarto/Piso/Malla")
 punto = Vector3(-4, 0, 2)
 horas = Array[float]([6.5, 8.0, 9.0])
+
+[node name="Niebla" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.8, -2.5)
+material_override = SubResource("MatNiebla")
+mesh = SubResource("MallaNiebla")
